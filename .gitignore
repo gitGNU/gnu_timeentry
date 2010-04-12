@@ -1,9 +1,9 @@
-.svn/
-api/
-base/
-bms/
-mailchimp/
-recurringinvoices/
-sample/
+.svn
+api
+base
+bms
+mailchimp
+recurringinvoices
+sample
 *.tar.gz
 
