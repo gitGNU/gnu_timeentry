@@ -92,6 +92,10 @@ if(class_exists("searchFunctions")){
 			$whereclause = $this->buildWhereClause();
 
                         $_SESSION["timeentryids"]= $this->idsArray;
+
+			// we can put all the code in here and do a test
+			// invoiceid = 0 so we can put a 'No records'
+			// message just as invoices_addedit.php does.
                         goURL("modules/timeentry/createinvoice.php");
 
 			return $message;

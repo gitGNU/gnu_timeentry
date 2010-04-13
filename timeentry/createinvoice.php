@@ -33,10 +33,16 @@
 	    FROM
 		timeentries
 	    WHERE
-		timeentries.id = '$idsArray[0]'
+		timeentries.id = '$idsArray[0]' and
+		timeentries.invoiceid = 0
 		";
 
 	$queryresult = $db->query($querystatement);
+	if( $db->numRows($queryresult) == false ) {	
+                # "First selected Time Entry cannot have been billed before.";
+		header("location:".APP_PATH."search.php?id=tbld:26b04a81-35b5-5c64-8500-c25cb80653a6");
+		exit;
+        }
 	$therecord = $db->fetchArray($queryresult);
 	$theclientid = $therecord['clientid']; 
 
