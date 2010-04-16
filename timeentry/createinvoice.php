@@ -55,6 +55,8 @@
 		timeentries.location,
 		timeentries.equipmentdelivered,
 		timeentries.equipmentprice,
+		timeentries.travel,
+		timeentries.parking,
 		clients.firstname, 
 		clients.lastname, 
 		clients.company,
@@ -90,7 +92,6 @@
 
 	$thetotal = 0; 
 	$itemnum = 0;
-	$thelist = '[';
 	do {
 		$thehours = $thetimeentry['hours'];
 		switch($thetimeentry['location']){
@@ -111,6 +112,8 @@
 					$thehours = TIMEENTRY_MINIMUMEMAIL/60;
 				break;
 		}
+		
+		if( $thetimeentry['type'] == 'flat' ) { $thehours = 1; }
 
 		$items[$itemnum]['uuid'] = $thetimeentry['uuid'];
 		$items[$itemnum]['productid'] = $thetimeentry['productid'];
@@ -122,20 +125,9 @@
 		$items[$itemnum]['quantity'] = $thehours;
 		$itemnum++;
 
-		$thelist .=  '{' .
-	              '"productid" : "' . $thetimeentry['productid'] . '",' .
-	              '"memo" : "' . $thetimeentry['startdate']." ".$thetimeentry['location']  . '",' .
-	              '"taxable" : 0,' .
-	              '"unitweight" : 0,' .
-	              '"unitcost" : 0,' .
-	              '"unitprice" : ' . $thetimeentry['unitprice'] . ',' .
-        	      '"quantity" : ' . $thehours .
-	              '},';
-
 		$thetotal += $thehours*$thetimeentry['unitprice'];
 
 		if( $thetimeentry['equipmentdelivered'] != '' ) {
-
 			$items[$itemnum]['uuid'] = $thetimeentry['uuid'];
 			$items[$itemnum]['productid'] = 'prod:454e27b2-cf9e-47da-15dc-5e20eeb1be4d';
 			$items[$itemnum]['memo'] = $thetimeentry['equipmentdelivered'];
@@ -146,25 +138,36 @@
 			$items[$itemnum]['quantity'] = 1;
 			$itemnum++;
 
-
-			$thelist .=  '{' .
-				'"productid" : "prod:454e27b2-cf9e-47da-15dc-5e20eeb1be4d",' .
-		                '"memo" : "' . $thetimeentry['equipmentdelivered']  . '",' .
-		                '"taxable" : 0,' .
-		                '"unitweight" : 0,' .
-		                '"unitcost" : 0,' .
-		                '"unitprice" : ' . $thetimeentry['equipmentprice'] . ',' .
-		                '"quantity" : 1'.
-		                '},';
-
 			$thetotal += $thetimeentry['equipmentprice'];
-	
+		}
+		if( $thetimeentry['travel'] != '' ) {
+			$items[$itemnum]['uuid'] = $thetimeentry['uuid'];
+			$items[$itemnum]['productid'] = 'prod:e77caf6a-84ad-ce53-3e3c-9f3952cea280';
+			$items[$itemnum]['memo'] = $thetimeentry['startdate'];
+			$items[$itemnum]['taxable'] = 0;
+			$items[$itemnum]['unitweight'] = 0;
+			$items[$itemnum]['unitcost'] = 0;
+			$items[$itemnum]['unitprice'] = $thetimeentry['travel'];
+			$items[$itemnum]['quantity'] = 1;
+			$itemnum++;
+
+			$thetotal += $thetimeentry['travel'];
+		}
+		if( $thetimeentry['parking'] != '' ) {
+			$items[$itemnum]['uuid'] = $thetimeentry['uuid'];
+			$items[$itemnum]['productid'] = 'prod:ac5582a8-e1c4-7bf8-e42c-b1880b20a94f';
+			$items[$itemnum]['memo'] = $thetimeentry['startdate'];
+			$items[$itemnum]['taxable'] = 0;
+			$items[$itemnum]['unitweight'] = 0;
+			$items[$itemnum]['unitcost'] = 0;
+			$items[$itemnum]['unitprice'] = $thetimeentry['parking'];
+			$items[$itemnum]['quantity'] = 1;
+			$itemnum++;
+
+			$thetotal += $thetimeentry['parking'];
 		}
 
 	} while($thetimeentry = $db->fetchArray($queryresult));
-
-	$thelist = preg_replace("/,$/",'',$thelist);
-	$thelist .= ']';
 
 	# instantiate and fill out invoice
 	$thetable = new invoices($db,"tbld:62fe599d-c18f-3674-9e54-b62c2d6b1883");
