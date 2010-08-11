@@ -97,6 +97,11 @@
 
 	$theinput = new inputField("travel",$therecord["travel"],"travel",false,NULL,8,NULL);
 	$theform->addField($theinput);
+	
+        $theinput = new inputField("invoiceid",$therecord["invoiceid"],"invoiceid",false,NULL,20,NULL);
+        $theinput->setAttribute("readonly", "readonly");
+        $theinput->setAttribute("class", "uneditable");
+	$theform->addField($theinput);
 
 	$thetable->getCustomFieldInfo();
 	$theform->prepCustomFields($db, $thetable->customFieldsQueryResult, $therecord);
@@ -114,6 +119,7 @@
 		<p>
 			<label for="id">id</label><br />
 			<input name="id" id="id" type="text" value="<?php echo $therecord["id"]; ?>" size="5" maxlength="5" readonly="readonly" class="uneditable" />
+			<?php $theform->showField("invoiceid");?>
 		</p>
 	</fieldset>
 
@@ -180,7 +186,7 @@
 		<fieldset>
 			<legend><label for="notes">notes</label></legend>
 			<p>
-			<textarea name="notes" cols="150" rows="40" id="notes"><?php echo $therecord["notes"]?></textarea>
+			<textarea name="notes" cols="150" rows="20" id="notes"><?php echo $therecord["notes"]?></textarea>
 		</fieldset>
                  
 
