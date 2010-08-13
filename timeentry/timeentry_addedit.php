@@ -108,6 +108,10 @@
 
 	$theform->jsMerge();
 
+        if($therecord["invoiceid"] > 0 ) {
+           $phpbms->bottomJS[] = 'disableSaves(document.forms["record"]);';
+        }
+
 	include("header.php");
 
 ?><div class="bodyline">
